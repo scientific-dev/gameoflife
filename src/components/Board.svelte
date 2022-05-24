@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import touchToMouse from 'svelte-touch-to-mouse';
     import Board from '../utils/Board';
+    import { EXAMPLES } from '../utils/Examples';
 
     let board = { running: false, rows: 10, columns: 10, scrollOffset: 40 }, 
         generations = 0,
@@ -18,14 +19,17 @@
     }
 
     onMount(() => {
-        let sOf = () => board.scrollOffset = window.innerWidth > 1024 ? 40 : 150;
+        let adjustScrollOffset = () => board.scrollOffset = window.innerWidth > 1024 ? 40 : 150;
+
         board = new Board(document.getElementById('canvas'));
         board.onEachGen = () => generations = board.generations;
+        board.onZoomChange = x => cellSize = x;
+        board.onGridChange = x => grids = x;
 
         window.board = board;
         window.addEventListener('resize', () => {
             board.resize();
-            sOf();
+            adjustScrollOffset();
         });
 
         speed = board.speed / 1000;
@@ -33,7 +37,7 @@
         grids = `${board.rows}x${board.columns}`;
 
         touchToMouse('canvas');
-        sOf();
+        adjustScrollOffset();
     });
 
     $: board.speed = speed * 1000;
@@ -43,11 +47,7 @@
     }
 
     $: {
-        let f = (x, y) => isNaN(x = parseInt(x)) ? y : x;
-        let [r, c] = grids.split('x');
-
-        board.rows = f(r, board.rows);
-        board.columns = f(c, board.columns);
+        [board.rows, board.columns] = Board.parseGrid(grids);
         board.resize?.();
     }
 </script>
@@ -73,7 +73,7 @@
 
         {#if !board.running}
             <a class="shadow" href="#start" on:click={() => board.nextGeneration()}>Next</a>
-            <a class="shadow" href="#start" on:click={() => board.fillBg().drawGame()}>Clear</a>
+            <a class="shadow" href="#start" on:click={() => board.fillBg().drawGame().data = {}}>Clear</a>
         {/if}
 
         <a class="shadow" href="#start">Speed: <input type="number" min=0.1 bind:value={speed}/>s</a>
@@ -81,7 +81,11 @@
         <a class="shadow" href="#start">Grids: <input bind:value={grids}/></a>
 
         <span class="shadow">Generations: {generations}</span>
-        <a class="shadow" href="#info" on:click={() => displayInfo = true}>i</a>
+        <a class="shadow" href="#info" on:click={() => {
+            board.stop();
+            board = board;
+            displayInfo = true;
+        }}>...</a>
     </div>
 
 </div>
@@ -109,14 +113,13 @@
         <h3>Examples:</h3>
 
         <div style="margin-left: 10px;">
-            <a 
-                class="info-btn" 
-                href="#start" 
-                on:click={() => plotExample(() => {
-                    board.plotExample('GOSPER_GLIDER_GUN')
-                    grids = '50x50';
-                })}
-            >Gosper Glider Gun</a>
+            {#each Object.entries(EXAMPLES) as [id, data]}
+                <a 
+                    class="info-btn" 
+                    href="#start" 
+                    on:click={() => plotExample(() => board.plotExample(id))}
+                >{data.name}</a>
+            {/each}
 
             <a class="info-btn" href="#start" on:click={() => plotExample(() => board.plotRandom())}>Random</a>
         </div>

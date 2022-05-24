@@ -1,3 +1,5 @@
+import { EXAMPLES } from "./Examples";
+
 export default class Board {
 
     data = {}
@@ -14,6 +16,8 @@ export default class Board {
     running = false;
     drawLines = true;
     onEachGen = () => {};
+    onZoomChange = () => {};
+    onGridChange = () => {};
 
     constructor (canvas = new HTMLCanvasElement()) {
         this.canvas = canvas;
@@ -168,7 +172,7 @@ export default class Board {
                 lastCol = currentCol;
             }
 
-            newData[r] = columns;
+            if (columns.size) newData[r] = columns;
             lastRow = currentRow;
         }
 
@@ -200,7 +204,11 @@ export default class Board {
     }
 
     plotExample (id) {
-        this.insertRawData(EXAMPLES[id]);
+        let data = EXAMPLES[id];
+
+        if (data.zoom) this.onZoomChange(data.zoom);
+        this.onGridChange(`${Math.max(data.minGrid[0], this.rows)}x${Math.max(data.minGrid[1], this.columns)}`);
+        this.insertRawData(data.data);
     }
 
     plotRandom () {
@@ -218,8 +226,11 @@ export default class Board {
         this.plotFromData(this.data);
     }
 
-}
+    static parseGrid (grids) {
+        let f = (x, y) => isNaN(x = parseInt(x)) ? y : x;
+        let [r, c] = grids.split('x');
 
-const EXAMPLES = {
-    GOSPER_GLIDER_GUN: {"1":[24],"2":[22,24],"3":[12,13,20,21,34,35],"4":[11,15,20,21,34,35],"5":[0,1,10,16,21,20],"6":[0,1,10,14,16,17,22,24],"7":[10,16,24],"8":[11,15],"9":[12,13]}
-};
+        return [f(r, this.rows), f(c, this.columns)];
+    }
+
+}
