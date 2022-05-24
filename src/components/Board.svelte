@@ -107,7 +107,7 @@
 
         <h3>Examples:</h3>
 
-        <div style="margin-left: 10px; margin-top: -10px;">
+        <div style="margin-left: 10px;">
             <a 
                 class="info-btn" 
                 href="#start" 
@@ -118,6 +118,17 @@
             >Gosper Glider Gun</a>
 
             <a class="info-btn" href="#start" on:click={() => plotExample(() => board.plotRandom())}>Random</a>
+        </div>
+
+        <h3>Additional Settings</h3>
+
+        <div>
+            <input 
+                type="checkbox" 
+                name="lines" 
+                bind:checked={board.drawLines}
+            />
+            <label for="lines">Lines</label>
         </div>
 
         <br/>
@@ -213,5 +224,9 @@
     .infotab a {
         color: black;
         font-weight: bold;
+    }
+
+    .infotab div {
+        margin-top: -10px;
     }
 </style>

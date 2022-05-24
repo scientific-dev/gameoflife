@@ -12,6 +12,7 @@ export default class Board {
     offsetY = 0;
     scrollOffset = 40;
     running = false;
+    drawLines = true;
     onEachGen = () => {};
 
     constructor (canvas = new HTMLCanvasElement()) {
@@ -70,6 +71,8 @@ export default class Board {
     }
 
     drawGame () {
+        if (!this.drawLines) return this;
+
         let o = this.offset,
             w = this.columns * o,
             h = this.rows * o;
@@ -91,7 +94,7 @@ export default class Board {
     resize () {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-        this.ctx.lineWidth = (this.cellSize > 20) ? 1 : 0.5;
+        this.ctx.lineWidth = this.drawLines ? (this.cellSize > 20) ? 1 : 0.5 : 0;
 
         if (!this.rows && !this.columns) {
             this.rows = Math.ceil(window.innerHeight / this.offset);
