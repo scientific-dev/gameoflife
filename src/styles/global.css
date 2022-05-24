@@ -11,9 +11,12 @@ body {
 	font-family: "Recursive";
 }
 
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--fg); }
+::-webkit-scrollbar-thumb { 
+	background: var(--fg);
+	border-radius: 3px;
+}
 
 /** Optional configurable css class names */
 

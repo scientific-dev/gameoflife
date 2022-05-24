@@ -226,6 +226,45 @@ export default class Board {
         this.plotFromData(this.data);
     }
 
+    plotFromPlaintxt (text) {
+        let newData = {},
+            split = text.split('\n'),
+            columns = 10;
+
+        for (let r = 0; r < split.length; r++) {
+            let row = split[r],
+                columnSplit = row.split('');
+
+            for (let c = 0; c < columnSplit.length; c++) {
+                let char = columnSplit[c++];
+                if (char == 'O') {
+                    newData[r + 1] ? newData[r + 1].add(c) : newData[r + 1] = new Set([c]);
+                    if (c >= columns) columns = c + 1;
+                }
+            }
+        }
+
+        this.data = newData;
+        this.onGridChange(`${split.length + 2}x${columns + 1}`);
+        this.plotFromData(this.data);
+    }
+
+    toPlaintxt () {
+        let str = '';
+
+        for (let i = 0; i < this.rows; i++) {
+            if (this.data[i]?.size) {
+                let substr = '.'.repeat(this.columns).split('');
+                for (const x of this.data[i]) if (this.columns >= x) substr[x] = 'O';
+                str += substr.join('');
+            }
+
+            str += '\n';
+        }
+
+        return str;
+    }
+
     static parseGrid (grids) {
         let f = (x, y) => isNaN(x = parseInt(x)) ? y : x;
         let [r, c] = grids.split('x');

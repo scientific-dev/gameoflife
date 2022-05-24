@@ -124,6 +124,23 @@
             <a class="info-btn" href="#start" on:click={() => plotExample(() => board.plotRandom())}>Random</a>
         </div>
 
+        <h3>Plaintext:</h3>
+
+        <div style="margin-left: 10px;">
+            <p style="margin-bottom: 7px;">Play the Game of life using the <a href="https://conwaylife.com/wiki/Plaintext">Plaintext format</a>.</p>
+            <textarea id="plaintext" value={board.toPlaintxt()}/>
+
+            <a 
+                class="info-btn" 
+                href="#start" 
+                style="width: calc(100% - 22px); text-align: center;"
+                on:click={() => {
+                    board.plotFromPlaintxt(document.getElementById('plaintext').value);
+                    displayInfo = false;
+                }}
+            >Start</a>
+        </div>
+
         <h3>Additional Settings</h3>
 
         <div>
@@ -232,5 +249,22 @@
 
     .infotab div {
         margin-top: -10px;
+    }
+
+    .infotab:not(textarea)::-webkit-scrollbar-thumb {
+        background-color: #18181d!important;
+    }
+
+    textarea {
+        width: calc(100% - 30px);
+        height: 200px;
+        outline: none;
+        border-radius: 4px;
+        resize: vertical;
+        background-color: #18181d;
+        color: white;
+        padding: 15px;
+        white-space: pre;
+        overflow-x: auto;
     }
 </style>
