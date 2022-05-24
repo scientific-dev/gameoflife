@@ -59,10 +59,11 @@
         height={window.innerHeight}
     />
 
-    <h1 class="float">Game of Life</h1>
+    <h1 class="float text-shadow">Game of Life</h1>
 
     <div class="float panel">
         <a 
+            class="shadow"
             href="#start"
             on:click={() => {
                 board[board.running ? 'stop' : 'start']();
@@ -71,16 +72,16 @@
         >{board.running ? 'Stop' : 'Start'}</a>
 
         {#if !board.running}
-            <a href="#start" on:click={() => board.nextGeneration()}>Next</a>
-            <a href="#start" on:click={() => board.fillBg().drawGame()}>Clear</a>
+            <a class="shadow" href="#start" on:click={() => board.nextGeneration()}>Next</a>
+            <a class="shadow" href="#start" on:click={() => board.fillBg().drawGame()}>Clear</a>
         {/if}
 
-        <a href="#start">Speed: <input type="number" min=0.1 bind:value={speed}/>s</a>
-        <a href="#start">Size: <input type="number" min=5 bind:value={cellSize}/></a>
-        <a href="#start">Grids: <input bind:value={grids}/></a>
+        <a class="shadow" href="#start">Speed: <input type="number" min=0.1 bind:value={speed}/>s</a>
+        <a class="shadow" href="#start">Size: <input type="number" min=5 bind:value={cellSize}/></a>
+        <a class="shadow" href="#start">Grids: <input bind:value={grids}/></a>
 
-        <span>Generations: {generations}</span>
-        <a href="#info" on:click={() => displayInfo = true}>i</a>
+        <span class="shadow">Generations: {generations}</span>
+        <a class="shadow" href="#info" on:click={() => displayInfo = true}>i</a>
     </div>
 
 </div>
