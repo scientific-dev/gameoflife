@@ -99,6 +99,8 @@
             More in <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Wikipedia</a>.
         </p>
 
+        <a class="info-btn" href="#default" on:click={() => displayInfo = false}>Close</a>
+
         <h3>Rules</h3>
 
         <ol>
@@ -153,8 +155,6 @@
         </div>
 
         <br/>
-        <a class="info-btn" href="#default" on:click={() => displayInfo = false}>Close</a>
-
         <hr/>
 
         <p>
