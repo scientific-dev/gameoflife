@@ -120,12 +120,14 @@ export default class Board {
     }
 
     plotFromData (data) {
-        let rows = Object.entries(data);
+        let rows = Object.entries(data),
+            y = Math.min(this.rows, rows.length);
 
-        for (let i = 0; i < rows.length; i++) {
+        for (let i = 0; i < y; i++) {
             let [r, columns] = rows[i];
             for (let c of columns)
-                this.fillCell(c, r, '#ffffff');
+                if (this.columns > c)
+                    this.fillCell(c, r, '#ffffff');
         }
     }
 
