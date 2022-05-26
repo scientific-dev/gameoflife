@@ -33,7 +33,7 @@ body {
     -o-transition: .2s;
 }
 
-.shadow {
+.shadow, .info-btn, textarea {
 	-webkit-box-shadow: 0px 5px 15px -8px rgba(0,0,0,0.5);
 	-moz-box-shadow: 0px 5px 15px -8px rgba(0,0,0,0.5);
 	box-shadow: 0px 5px 15px -8px rgba(0,0,0,0.5);

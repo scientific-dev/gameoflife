@@ -9,7 +9,8 @@
         speed = 1.5,
         cellSize = 50,
         grids = '0x0',
-        displayInfo = false;
+        displayInfo = false,
+        plainTxt = null;
 
     function plotExample (fn) {
         fn();
@@ -19,7 +20,8 @@
     }
 
     onMount(() => {
-        let adjustScrollOffset = () => board.scrollOffset = window.innerWidth > 1024 ? 40 : 150;
+        let adjustScrollOffset = () => board.scrollOffset = window.innerWidth > 1024 ? 40 : 150,
+            searchQuery = new URLSearchParams(window.location.search);
 
         board = new Board(document.getElementById('canvas'));
         board.onEachGen = () => generations = board.generations;
@@ -38,6 +40,15 @@
 
         touchToMouse('canvas');
         adjustScrollOffset();
+
+        let txtQuery = searchQuery.get('txt'),
+            zoom = searchQuery.get('zoom'),
+            grid = searchQuery.get('grid'),
+            f = (x, y) => isNaN(x) ? y : x;
+
+        if (txtQuery) board.plotFromPlaintxt(decodeURIComponent(txtQuery));
+        if (zoom) cellSize = f(parseInt(zoom), cellSize);
+        if (grid) grids = grid;
     });
 
     $: board.speed = speed * 1000;
@@ -50,6 +61,8 @@
         [board.rows, board.columns] = Board.parseGrid(grids);
         board.resize?.();
     }
+
+    $: plainTxt = displayInfo ? board.toPlaintxt() : null;
 </script>
 
 <div style={displayInfo ? 'opacity: 0.7;' : ''}>  
@@ -126,16 +139,39 @@
             <a class="info-btn" href="#start" on:click={() => plotExample(() => board.plotRandom())}>Random</a>
         </div>
 
+        <h3>Share: </h3>
+
+        <div style="margin-left: 10px;">
+            <p>Share the Game of life layout you are playing with to your friends.</p>
+            <input
+                class="link-display shadow" 
+                id="link_display"
+                value="{window.location.origin}{window.location.pathname}?code={decodeURIComponent(plainTxt)}&zoom={cellSize}&grid={grids}"
+                disabled=true
+            />
+
+            <a
+                class="info-btn wide-btn"
+                href="#info"
+                on:click={({ target }) => {
+                    let input = document.getElementById('link_display');
+                    input.select();
+                    input.setSelectionRange(0, 9999);
+                    navigator.clipboard.writeText(input.value);
+                    target.innerHTML = 'Copied!';
+                }}
+            >Copy Link</a>
+        </div>
+
         <h3>Plaintext:</h3>
 
         <div style="margin-left: 10px;">
             <p style="margin-bottom: 7px;">Play the Game of life using the <a href="https://conwaylife.com/wiki/Plaintext">Plaintext format</a>.</p>
-            <textarea id="plaintext" value={board.toPlaintxt()}/>
+            <textarea id="plaintext" bind:value={plainTxt}/>
 
             <a 
-                class="info-btn" 
-                href="#start" 
-                style="width: calc(100% - 22px); text-align: center;"
+                class="info-btn wide-btn" 
+                href="#start"
                 on:click={() => {
                     board.plotFromPlaintxt(document.getElementById('plaintext').value);
                     displayInfo = false;
@@ -215,6 +251,12 @@
         color: white!important;;
     }
 
+    .wide-btn {
+        width: calc(100% - 20px);
+        margin-left: 0;
+        text-align: center;
+    }
+
     input {
         outline: none;
         color: white;
@@ -266,5 +308,18 @@
         padding: 15px;
         white-space: pre;
         overflow-x: auto;
+    }
+
+    .link-display {
+        display: block;
+        width: calc(100% - 10px);
+        padding: 5px;
+        border-radius: 3px;
+        margin-top: -10px;
+        margin-bottom: 5px;
+        font-family: "Recursive";
+        font-size: 16px;
+        background-color: rgb(255, 255, 255);
+        color: black;
     }
 </style>
