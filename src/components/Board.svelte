@@ -4,6 +4,8 @@
     import Board from '../utils/Board';
     import { EXAMPLES } from '../utils/Examples';
 
+    const setPlainTxt = x => plainTxt = x;
+    
     let board = { running: false, rows: 10, columns: 10, scrollOffset: 40 }, 
         generations = 0,
         speed = 1.5,
@@ -46,7 +48,7 @@
             grid = searchQuery.get('grid'),
             f = (x, y) => isNaN(x) ? y : x;
 
-        if (txtQuery) board.plotFromPlaintxt(decodeURIComponent(txtQuery));
+        if (txtQuery) board.plotFromPlaintxt(decodeURIComponent(txtQuery), 0);
         if (zoom) cellSize = f(parseInt(zoom), cellSize);
         if (grid) grids = grid;
     });
@@ -62,7 +64,7 @@
         board.resize?.();
     }
 
-    $: plainTxt = displayInfo ? board.toPlaintxt() : null;
+    $: setPlainTxt(displayInfo ? board.toPlaintxt() : null);
 </script>
 
 <div style={displayInfo ? 'opacity: 0.7;' : ''}>  

@@ -228,7 +228,7 @@ export default class Board {
         this.plotFromData(this.data);
     }
 
-    plotFromPlaintxt (text) {
+    plotFromPlaintxt (text, o = 1) {
         let newData = {},
             split = text.split('\n'),
             columns = 10;
@@ -240,14 +240,15 @@ export default class Board {
             for (let c = 0; c < columnSplit.length; c++) {
                 let char = columnSplit[c];
                 if (char == 'O') {
-                    newData[r + 1] ? newData[r + 1].add(c) : newData[r + 1] = new Set([c]);
-                    if (c >= columns) columns = c + 1;
+                    let x = c + o;
+                    newData[r + o] ? newData[r + o].add(x) : newData[r + o] = new Set([x]);
+                    if (c >= columns) columns = x;
                 }
             }
         }
 
         this.data = newData;
-        this.onGridChange(`${split.length + 2}x${columns + 1}`);
+        this.onGridChange(`${split.length + (2 * o)}x${columns + o + 1}`);
         this.plotFromData(this.data);
     }
 
