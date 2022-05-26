@@ -146,7 +146,7 @@
             <input
                 class="link-display shadow" 
                 id="link_display"
-                value="{window.location.origin}{window.location.pathname}?code={decodeURIComponent(plainTxt)}&zoom={cellSize}&grid={grids}"
+                value="{window.location.origin}{window.location.pathname}?txt={plainTxt.replace(/\n/g, '%0A')}&zoom={cellSize}&grid={grids}"
                 disabled=true
             />
 

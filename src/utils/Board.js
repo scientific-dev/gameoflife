@@ -240,7 +240,6 @@ export default class Board {
             for (let c = 0; c < columnSplit.length; c++) {
                 let char = columnSplit[c];
                 if (char == 'O') {
-                    console.log(c)
                     newData[r + 1] ? newData[r + 1].add(c) : newData[r + 1] = new Set([c]);
                     if (c >= columns) columns = c + 1;
                 }
